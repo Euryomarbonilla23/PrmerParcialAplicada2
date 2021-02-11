@@ -4,12 +4,143 @@
 @using _1er_ParcialAplicada2.Controllers;
 
 <h2>Registro de Articulos</h2>
-<EditForm Model="Articulo">
-
+<h3>@Estado</h3>
+<EditForm Model="Articulo" OnValidSubmit="Guardar">
+    <div class="container-fluid">
+        <div class="form-group">
+            <label for="ArticuloIdNumber">Articulo ID: </label>
+            <div class="input-group">
+                <InputNumber id="ArticuloIdNumber" @bind-Value="Articulo.ArticuloId" class="form-control" />
+                <button type="button" class="btn btn-primary" @onclick="Buscar"> Buscar</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ArticuloDescripcionText">Descripcion: </label>
+            <InputText id="ArticuloDescripcionDate" @bind-Value="Articulo.Descripcion" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="ArticuloExistenciaText">Existencia: </label>
+            <InputNumber id="ArticuloExistenciaText" @bind-Value="Articulo.Existencia" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="ArticuloCostoText">Costo: </label>
+            <InputNumber id="ArticuloCedulaoText" @bind-Value="Articulo.Costo" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="ArticuloTelefonoText">Valor Ivntario: </label>
+            <InputNumber id="ArticuloTelefonoText" @bind-Value="Calcular" ReadOnly="true" class="form-control" />
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn btn-secondary" type="button" @onclick="Nuevo">Nuevo</button>
+            <button class="btn btn-success">Guardar</button>
+            <button class="btn btn-danger" type="button" @onclick="Eliminar">Eliminar</button>
+        </div>
+    </div>
 </EditForm>
 
 @code{
     Articulos Articulo = new Articulos();
+    public string Estado = String.Empty;
+
+
+
+    private void Guardar()
+    {
+
+        if (ArticulosController.Guardar(Articulo))
+        {
+            Estado = "Guardado";
+            Limpiar();
+        }
+        else
+        {
+            Estado = "Hubo un error";
+        }
+
+
+    }
+    private void Buscar()
+    {
+        try
+        {
+            int id = Articulo.ArticuloId;
+            Articulo = ArticulosController.Buscar(id);
+            if (Articulo != null)
+            {
+                Estado = "Encontrado";
+            }
+            else
+            {
+                Estado = "No existe";
+            }
+        }
+        catch (Exception ex)
+        {
+
+            Estado = ex.Message;
+        }
+
+    }
+    private void Nuevo()
+    {
+        Estado = string.Empty;
+        Limpiar();
+    }
+
+    private void Limpiar()
+    {
+        Articulo = new Articulos();
+
+    }
+
+    private void Eliminar()
+    {
+        try
+        {
+            int id = Articulo.ArticuloId;
+            Articulo = ArticulosController.Buscar(id);
+            if (Articulo != null)
+            {
+                if (ArticulosController.Eliminar(id))
+                {
+                    Estado = "Eliminado Correctamente";
+                    Limpiar();
+                }
+                else
+                {
+                    Estado = "Hubo un Error";
+                }
+            }
+            else
+            {
+                Estado = "No existe";
+            }
+        }
+        catch (Exception ex1)
+        {
+
+            Estado = ex1.Message;
+        }
+    }
+    private decimal Calcular()
+    {
+
+        decimal valor = 0;
+        Contexto c = new Contexto();
+        if (c.Articulos.Count() > 0)
+        {
+            foreach (var item in c.Articulos)
+            {
+                valor += (item.Costo * item.Existencia);
+            }
+        }
+
+
+
+
+        return valor;
+    }
     
+
 }
- 

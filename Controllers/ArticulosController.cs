@@ -11,6 +11,27 @@ namespace _1er_ParcialAplicada2.Controllers
 {
     public class ArticulosController
     {
+        public static bool Guardar(Articulos Articulo)
+        {
+            Contexto contexto = new Contexto();
+            bool paso = false;
+            try
+            {
+                if (Articulo.ArticuloId == 0)
+                    paso = Insertar(Articulo);
+                else
+                    paso = Modificar(Articulo);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+            return paso;
+        }
         public static bool Insertar(Articulos Articulo)
         {
             Contexto contexto = new Contexto();
@@ -19,6 +40,10 @@ namespace _1er_ParcialAplicada2.Controllers
             {
                 contexto.Articulos.Add(Articulo);
                 paso = contexto.SaveChanges()>0;
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
@@ -34,6 +59,10 @@ namespace _1er_ParcialAplicada2.Controllers
             {
                 contexto.Entry(Articulo).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
@@ -52,6 +81,10 @@ namespace _1er_ParcialAplicada2.Controllers
             {
                 Articulo = contexto.Articulos.Find(Id);
                 
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
@@ -74,6 +107,10 @@ namespace _1er_ParcialAplicada2.Controllers
                 paso = contexto.SaveChanges() > 0;
 
             }
+            catch (Exception)
+            {
+                throw;
+            }
             finally
             {
                 contexto.Dispose();
@@ -81,13 +118,17 @@ namespace _1er_ParcialAplicada2.Controllers
             return paso;
         }
 
-        public virtual List<Articulos> GetList(Expression<Func<Articulos, bool>> expression)
+        public static List<Articulos> GetList(Expression<Func<Articulos, bool>> expression)
         {
             Contexto contexto = new Contexto();
             List<Articulos> lista = new List<Articulos>();
             try
             {
                 lista = contexto.Articulos.Where( expression).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {

@@ -1,0 +1,73 @@
+﻿@page "/consultaarticulos"
+@using _1er_ParcialAplicada2.Data;
+@using _1er_ParcialAplicada2.Models;
+@using _1er_ParcialAplicada2.Controllers;
+
+<h3>ConsultaArticulos</h3>
+
+@if (Lista == null)
+{
+    <p> <em> Cargando ... </em> </p>
+}
+else {
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descripcion</th>
+            <th>Existencia</th>
+            <th>Coste</th>
+            
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var listar in Lista)
+        {
+            <tr>
+
+                <td>@listar.ArticuloId</td>
+                <td>@listar.Descripcion</td>
+                <td>@listar.Existencia</td>
+                <td>@listar.Costo</td>
+
+                
+
+            </tr>
+         }
+    </tbody>
+
+
+</table>
+<h3> Valor Inventario: @Calcular()</h3>
+    }
+
+
+
+@code {
+
+    List<Articulos> Lista;
+    protected override async Task OnInitializedAsync()
+    {
+        Lista = ArticulosController.GetList(p => true);
+    }
+
+    private decimal Calcular()
+    {
+
+        decimal valor = 0;
+        Contexto c = new Contexto();
+        if (c.Articulos.Count() > 0)
+        {
+            foreach (var item in c.Articulos)
+            {
+                valor += (item.Costo * item.Existencia);
+            }
+        }
+
+
+
+
+        return valor;
+    }
+}
