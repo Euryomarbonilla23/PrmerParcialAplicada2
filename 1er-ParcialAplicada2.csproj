@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>_1er_ParcialAplicada2</RootNamespace>
+    <StartWorkingDirectory>$(MSBuildProjectDirectory)</StartWorkingDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Consultas\" />
+    <Folder Include="Views\" />
   </ItemGroup>
 
 </Project>
